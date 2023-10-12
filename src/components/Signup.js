@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { Button, TextField, Typography, Grid, Link } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import AppleIcon from '@mui/icons-material/Apple';
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -34,35 +37,70 @@ function Signup() {
     });
 };
 
-
-  return (
-    <div className="signup-container">
-      <h2>Signup</h2>
-
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <input
-        type="password"
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
-
-      <button onClick={handleSignup}>Signup</button>
-    </div>
-  );
+return (
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'linear-gradient(180deg, #B0E0E6, #FFFFFF)' }}>
+    <Grid container direction="column" spacing={3} style={{ maxWidth: 400, padding: 20, borderRadius: 15, paddingLeft: 0 , boxShadow: '0 3px 10px rgba(0,0,0,0.2)', backgroundColor: 'white' }}>
+      <Grid item>
+        <Typography variant="h4" align="center">
+          🌐 Jenna
+        </Typography>
+        <Typography variant="subtitle1" align="center" gutterBottom>
+          Already have an account? <Link href="/login">Sign in</Link>
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Button variant="contained" color="primary" startIcon={<GoogleIcon />} fullWidth>
+          Sign up with Google
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button variant="contained" startIcon={<AppleIcon />} fullWidth>
+          Sign up with Apple
+        </Button>
+      </Grid>
+      <Grid item>
+        <Typography variant="subtitle1" align="center" gutterBottom>
+          Or
+        </Typography>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          label="Email address"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          label="Confirm Password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <Button variant="contained" color="primary" fullWidth style={{ marginTop: 10, background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)' }} onClick={handleSignup}>
+          Signup
+        </Button>
+      </Grid>
+      <Grid item>
+        <Typography variant="caption" align="center" display="block">
+          By signing up, you agree to the <Link href="#">Terms and Conditions</Link> and <Link href="#">Privacy Policy</Link>.
+        </Typography>
+      </Grid>
+    </Grid>
+  </div>
+);
 }
 
 export default Signup;
