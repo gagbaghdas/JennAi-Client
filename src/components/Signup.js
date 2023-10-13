@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { Button, TextField, Typography, Grid, Link } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
+import { useNavigate } from 'react-router-dom';
+
 
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (confirmPassword === "") {
+        setPasswordsMatch(true);
+    } else {
+        setPasswordsMatch(password === confirmPassword);
+    }
+}, [password, confirmPassword]);
 
   const handleSignup = () => {
     // Define the API endpoint
-    const apiEndpoint = process.env.API_URL + "signup";
+    const apiEndpoint = process.env.REACT_APP_API_BASE_URL + "signup";
 
     // Make the API request
     fetch(apiEndpoint, {
@@ -26,15 +40,21 @@ function Signup() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            // Handle successful signup (e.g., redirect to login page or dashboard)
-        } else {
-            // Handle signup error (e.g., show error message)
-        }
-    })
-    .catch(error => {
-        // Handle fetch error (e.g., network issue)
-    });
+      if (data.success) {
+        console.log("signup response received success")
+        setErrorMessage(""); // Clear any previous error messages
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
+        navigate('/welcome'); // redirect to the blank page
+      } else {
+        console.log("signup response received error")
+        setErrorMessage(data.message);
+      }
+  })
+  .catch(error => {
+    console.log("signup error", error)
+      // Handle fetch error (e.g., network issue)
+  });
 };
 
 return (
@@ -80,7 +100,7 @@ return (
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <TextField
+       <TextField
           variant="outlined"
           margin="normal"
           fullWidth
@@ -88,10 +108,24 @@ return (
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          error={!passwordsMatch}
+          helperText={!passwordsMatch && "Passwords do not match"}
         />
-        <Button variant="contained" color="primary" fullWidth style={{ marginTop: 10, background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)' }} onClick={handleSignup}>
+        {errorMessage && (
+          <Typography variant="body2" color="error" align="center">
+              {errorMessage}
+          </Typography>
+        )}
+      <Button 
+          variant="contained" 
+          color="primary" 
+          fullWidth 
+          style={{ marginTop: 10, background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)' }} 
+          onClick={handleSignup}
+          disabled={!passwordsMatch || !email || !password || !confirmPassword}
+      >
           Signup
-        </Button>
+      </Button>
       </Grid>
       <Grid item>
         <Typography variant="caption" align="center" display="block">
