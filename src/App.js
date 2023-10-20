@@ -1,7 +1,6 @@
-import React from 'react';
-import Routing from './routes';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-
+import React from "react";
+import Routing from "./routes";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 function App() {
   const theme = createTheme();

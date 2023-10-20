@@ -5,7 +5,7 @@ import SignupPage from './components/Signup';
 import Onboarding from './components/Onboarding';
 import { PrivateRoute } from './components/routes/PrivateRoute';
 import { PublicRoute } from './components/routes/PublicRoute';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/dashboard/Dashboard';
 
 function Routing() {
   return (
