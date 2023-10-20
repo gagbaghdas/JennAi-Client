@@ -3,6 +3,7 @@ import { Button, TextField, Typography, Grid, Link } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import { useNavigate } from 'react-router-dom';
+import api from '../api';
 
 
 function Signup() {
@@ -22,24 +23,14 @@ function Signup() {
     }
 }, [password, confirmPassword]);
 
-  const handleSignup = () => {
-    // Define the API endpoint
-    const apiEndpoint = process.env.REACT_APP_API_BASE_URL + "signup";
-
-    // Make the API request
-    fetch(apiEndpoint, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            email: email,
-            password: password,
-            confirmPassword: confirmPassword
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
+  const handleSignup = () => {  
+    api.post("signup",{
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword
+  }, { bypassInterceptor: true })
+    .then(response => {
+      const data = response.data
       if (data.success) {
         console.log("signup response received success")
         setErrorMessage(""); // Clear any previous error messages

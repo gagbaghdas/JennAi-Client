@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import CloseIcon from "@mui/icons-material/Close";
+import api from '../../../api';
 
 const CustomNewProjectWindow = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -36,7 +37,6 @@ function NewProjectWindow({ open, onClose }) {
   const [briefFileName, setBriefFileName] = useState("");
   const [templateFileName, setTemplateFileName] = useState("");
 
-
   const handleNext = async () => {
     if (step < 3) {
       setStep(step + 1);
@@ -52,24 +52,14 @@ function NewProjectWindow({ open, onClose }) {
       if (templateFile) {
         formData.append("templateFile", templateFile);
       }
-
+  
       try {
-        const apiEndpoint = process.env.REACT_APP_API_BASE_URL + "create_project";
-        const accessToken = localStorage.getItem('access_token');
-        const refreshToken = localStorage.getItem('refresh_token');
-
-        const response = await fetch({apiEndpoint}, {
-          method: "POST",
-          body: formData,
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Refresh-Token': refreshToken,
-          },
-        });
+  
+        const response = await api.post("create_project", formData);
         
-        const data = await response.json();
+        const data = response.data;
         
-        if (response.ok) {
+        if (response.status === 201) {
           onClose(); // Close the dialog if successful
         } else {
           console.error("Error submitting data:", data.message);
@@ -81,6 +71,7 @@ function NewProjectWindow({ open, onClose }) {
       }
     }
   };
+  
 
   useEffect(() => {
     if (!open) {

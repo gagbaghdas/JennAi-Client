@@ -3,6 +3,7 @@ import { Button, TextField, Typography, Grid, Link } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import { useNavigate } from 'react-router-dom';
+import api from '../api';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -11,22 +12,12 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    // Define the API endpoint
-    const apiEndpoint = process.env.REACT_APP_API_BASE_URL + "login";
-
-    // Make the API request
-    fetch(apiEndpoint, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            email: email,
-            password: password
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
+    api.post("login", {
+      email: email,
+      password: password
+    }, { bypassInterceptor: true })
+    .then(response => {
+        const data = response.data;
         if (data.success) {
           console.log("login response received success")
           // After receiving tokens from server
@@ -35,14 +26,16 @@ function Login() {
 
           setErrorMessage("");
           navigate("/dashboard");
-        } else {
-          console.log("login response received error");
-          setErrorMessage(data.message || "Login failed");  // Display the message from server or a default one
-        }      
+        }
     })
     .catch(error => {
-      console.log("login error", error)
-        // Handle fetch error (e.g., network issue)
+     if (error.response && error.response.status === 403) {
+        const errorMessage = error.response.data.message;
+        console.log(error)
+        setErrorMessage(errorMessage || "Login failed");  // Display the message from server or a default one
+      } else {
+        console.log("login error", error);
+      }
     });
 };
 

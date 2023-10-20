@@ -11,6 +11,7 @@ import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import LogoutIcon from '@mui/icons-material/Logout';  // Import Logout Icon
 
 const drawerWidth = 240;
 
@@ -91,7 +92,13 @@ function NavigationBar(){
     const handleDrawerClose = () => {
       setOpen(false);
     };
-  
+
+    const handleLogout = () => {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      // Assuming you're using react-router-dom for routing
+      window.location.href = '/login';  
+    };
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -113,6 +120,10 @@ function NavigationBar(){
             <Typography variant="h6" noWrap component="div">
               Welcome to Dashboard
             </Typography>
+            <Box sx={{ flexGrow: 1 }} />
+            <IconButton color="inherit" edge="end" onClick={handleLogout}>
+              <LogoutIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open} PaperProps={{ sx:{ background: 'linear-gradient(180deg, #00dbff, #05a4b6)' }}}>
