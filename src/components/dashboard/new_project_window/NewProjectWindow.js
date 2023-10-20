@@ -26,18 +26,6 @@ const CustomNewProjectWindow = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const FileInput = styled('input')({
-  display: 'none',
-});
-
-const FileLabel = styled('label')(({ theme }) => ({
-  padding: theme.spacing(1),
-  border: '1px solid #ccc',
-  display: 'inline-block',
-  cursor: 'pointer',
-}));
-
-
 function NewProjectWindow({ open, onClose }) {
   const [projectName, setProjectName] = useState("");
   const [brief, setBrief] = useState("");
