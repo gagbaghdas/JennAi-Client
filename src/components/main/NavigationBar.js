@@ -12,6 +12,7 @@ import MuiAppBar from '@mui/material/AppBar';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import LogoutIcon from '@mui/icons-material/Logout';  // Import Logout Icon
+import * as CookieManager from '../../cookieManager';
 
 const drawerWidth = 240;
 
@@ -94,9 +95,9 @@ function NavigationBar(){
     };
 
     const handleLogout = () => {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      // Assuming you're using react-router-dom for routing
+      CookieManager.removeAccessToken();
+      CookieManager.removeRefreshToken();
+
       window.location.href = '/login';  
     };
 

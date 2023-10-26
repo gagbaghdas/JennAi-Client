@@ -4,6 +4,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import * as CookieManager from '../cookieManager';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -20,10 +21,8 @@ function Login() {
         const data = response.data;
         if (data.success) {
           console.log("login response received success")
-          // After receiving tokens from server
-          localStorage.setItem('access_token', data.access_token);
-          localStorage.setItem('refresh_token', data.refresh_token);
-
+          CookieManager.setAccessToken(data.access_token)
+          CookieManager.setRefreshToken(data.refresh_token)
           setErrorMessage("");
           navigate("/dashboard");
         }

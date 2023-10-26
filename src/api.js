@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as CookieManager from './cookieManager';
 
 // Create an axios instance
 const api = axios.create({
@@ -7,7 +8,8 @@ const api = axios.create({
 
 api.interceptors.request.use(function (config) {
   if (config.url !== '/login' && config.url !== '/token/refresh' && config.url !== '/signup') {
-    const token = localStorage.getItem('access_token');
+
+    const token = CookieManager.getAccessToken();
     config.headers.Authorization = token ? `Bearer ${token}` : '';
   }
   return config;
@@ -21,8 +23,7 @@ api.interceptors.response.use(
     if (!error.config.bypassInterceptor && error.response && error.response.status === 401) {
         // Attempt to refresh the token
         const res = await refreshToken();
-        // Update the access token in localStorage
-        localStorage.setItem('access_token', res.data.access_token);
+        CookieManager.setAccessToken(res.data.access_token)
         // Retry the original request with the new token
         const originalRequest = error.config;
         originalRequest.headers['Authorization'] = 'Bearer ' + res.data.access_token;
@@ -34,7 +35,7 @@ api.interceptors.response.use(
 );
 
 async function refreshToken() {
-  const refreshToken = localStorage.getItem('refresh_token');
+  const refreshToken = CookieManager.getRefreshToken();
   if (!refreshToken) {
     // Handle missing refresh token
     console.error('No refresh token found');

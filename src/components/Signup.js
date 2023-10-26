@@ -4,6 +4,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import AppleIcon from '@mui/icons-material/Apple';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import * as CookieManager from '../cookieManager';
 
 
 function Signup() {
@@ -34,8 +35,8 @@ function Signup() {
       if (data.success) {
         console.log("signup response received success")
         setErrorMessage(""); // Clear any previous error messages
-        localStorage.setItem('access_token', data.access_token);
-        localStorage.setItem('refresh_token', data.refresh_token);
+        CookieManager.setAccessToken(data.access_token);
+        CookieManager.setRefreshToken(data.refresh_token);
         navigate('/welcome'); // redirect to the blank page
       } else {
         console.log("signup response received error")
