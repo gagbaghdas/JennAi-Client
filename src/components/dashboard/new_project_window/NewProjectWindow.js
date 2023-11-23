@@ -28,6 +28,7 @@ const CustomNewProjectWindow = styled(Dialog)(({ theme }) => ({
 }));
 
 function NewProjectWindow({ open, onClose }) {
+  const [templates, setTemplates] = useState([]);
   const [projectName, setProjectName] = useState("");
   const [brief, setBrief] = useState("");
   const [briefFile, setBriefFile] = useState(null);
@@ -83,14 +84,22 @@ function NewProjectWindow({ open, onClose }) {
     }
   }, [open]);
 
-  const templates = [
-    { id: 1, image: "static/images/gdd-template-1.png" },
-    { id: 2, image: "static/images/gdd-template-2.png" },
-    { id: 3, image: "static/images/gdd-template-3.png" },
-    { id: 4, image: "static/images/gdd-template-4.png" },
-    { id: 5, image: "static/images/gdd-template-4.png" },
-    //...add more templates as needed
-  ];
+  useEffect(() => {
+    const fetchTemplates = async () => {
+        try {
+            const response = await api.get("/templates");
+            if (response.status === 200) {
+                setTemplates(response.data);
+            } else {
+                console.error("Error fetching templates:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    fetchTemplates();
+}, []);
 
   return (
     <CustomNewProjectWindow
@@ -159,20 +168,20 @@ function NewProjectWindow({ open, onClose }) {
               <Box display="flex" overflow="auto" mt={2}>
                 {templates.map((template) => (
                   <Box
-                    key={template.id}
+                    key={template._id}
                     onClick={() =>
                       setTemplateId(
-                        template.id === templateId ? 0 : template.id
+                        template._id === templateId ? 0 : template._id
                       )
                     }
                     border={
-                      template.id === templateId ? "3px solid #05a4b6" : "none"
+                      template._id === templateId ? "3px solid #05a4b6" : "none"
                     }
                     m={1}
                   >
                     <img
                       src={template.image}
-                      alt={`Template ${template.id}`}
+                      alt={`Template ${template._id}`}
                       width={400}
                     />
                   </Box>

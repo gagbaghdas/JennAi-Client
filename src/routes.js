@@ -6,6 +6,7 @@ import Onboarding from './components/Onboarding';
 import { PrivateRoute } from './components/routes/PrivateRoute';
 import { PublicRoute } from './components/routes/PublicRoute';
 import Dashboard from './components/dashboard/Dashboard';
+import ProjectEdit from './components/dashboard/ProjectEdit';
 
 function Routing() {
   return (
@@ -29,6 +30,11 @@ function Routing() {
         <Route path="/dashboard"  element={
             <PrivateRoute>
                 <Dashboard />
+            </PrivateRoute>} 
+        />
+         <Route path="/edit/:projectId" element={
+            <PrivateRoute>
+                <ProjectEdit />
             </PrivateRoute>} 
         />
       </Routes>

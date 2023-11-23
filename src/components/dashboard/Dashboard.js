@@ -39,10 +39,10 @@ export default function Dashboard() {
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={5}>
           {projects.map((project, index) => (
-            <DashboardItem key={index} title={project.project_name} />
+            <DashboardItem itemKey= {project._id} title={project.project_name} />
           ))}
           <DashboardItem
-            key="new_game"
+            itemKey="new_game"
             title="Create New Game"
             children={
               <AddCircleOutlineRoundedIcon

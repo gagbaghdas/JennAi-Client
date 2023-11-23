@@ -13,6 +13,13 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import LogoutIcon from '@mui/icons-material/Logout';  // Import Logout Icon
 import * as CookieManager from '../../cookieManager';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import DashboardIcon from '@mui/icons-material/Dashboard'; // Import Dashboard Icon
+import List from '@mui/material/List';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+
 
 const drawerWidth = 240;
 
@@ -82,6 +89,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 function NavigationBar(){
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -99,6 +107,10 @@ function NavigationBar(){
       CookieManager.removeRefreshToken();
 
       window.location.href = '/login';  
+    };
+
+    const handleDashboardClick = () => {
+      navigate('/dashboard'); // Navigate to dashboard route
     };
 
     return (
@@ -134,6 +146,14 @@ function NavigationBar(){
             </IconButton>
           </DrawerHeader>
           <Divider />
+          <List>
+              <ListItemButton  onClick={handleDashboardClick}>
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Dashboard" />
+              </ListItemButton>
+            </List>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
