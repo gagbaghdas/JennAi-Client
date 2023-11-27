@@ -11,10 +11,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import Layout from "../main/Layout";
 import api from "../../api";
 import { useNavigate } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 function EditProject() {
 
     const navigate = useNavigate();
+    const [openDialog, setOpenDialog] = useState(false); // State for confirmation dialog
 
     const { projectId } = useParams();
     const [project, setProject] = useState({
@@ -47,16 +54,7 @@ function EditProject() {
           console.error('Error:', error);
         }
       };
-    // Fetch project data and templates using projectId
-    // For demo, using static templates data
-    setTemplates([
-        { id: 1, image: "static/images/gdd-template-1.png" },
-        { id: 2, image: "static/images/gdd-template-2.png" },
-        { id: 3, image: "static/images/gdd-template-3.png" },
-        { id: 4, image: "static/images/gdd-template-4.png" },
-        { id: 5, image: "static/images/gdd-template-4.png" },
-    ]);
-
+  
     // Fetch templates data
     const fetchTemplatesData = async () => {
         try {
@@ -104,6 +102,30 @@ function EditProject() {
         // Handle network errors
     }
 };
+ // Function to open the delete confirmation dialog
+ const handleOpenDeleteDialog = () => {
+  setOpenDialog(true);
+};
+
+// Function to close the delete confirmation dialog
+const handleCloseDialog = () => {
+  setOpenDialog(false);
+};
+
+// Function to handle project deletion
+const handleDeleteProject = async () => {
+  try {
+      const response = await api.delete(`/delete_project/${projectId}`);
+      if (response.status === 200) {
+          navigate('/dashboard');
+      } else {
+          console.error('Error deleting project:', response.statusText);
+      }
+  } catch (error) {
+      console.error('Error:', error);
+  }
+  setOpenDialog(false);
+};
 
   return (
     <Layout>
@@ -146,16 +168,16 @@ function EditProject() {
         <Box display="flex" overflow="auto" mt={1}>
           {templates.map((template) => (
             <Box
-              key={template.id}
-              onClick={() =>    setProject({...project, templateId: template.id})}
+              key={template._id}
+              onClick={() =>    setProject({...project, templateId: template._id})}
               border={
-                template.id === project.template_id ? "3px solid #05a4b6" : "none"
+                template._id === project.templateId ? "3px solid #05a4b6" : "none"
               }
               m={1}
             >
               <img
                 src={template.image}
-                alt={`Template ${template.id}`}
+                alt={`Template ${template._id}`}
                 width={100} // Adjust as needed
               />
             </Box>
@@ -166,7 +188,24 @@ function EditProject() {
         <Button variant="contained" onClick={handleSaveChanges}>
           Save Changes
         </Button>
+        <IconButton onClick={handleOpenDeleteDialog} color="secondary">
+                        <DeleteIcon />
+                    </IconButton>
       </Box>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+                    <DialogTitle>{"Confirm Deletion"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to delete this project?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseDialog}>Cancel</Button>
+                        <Button onClick={handleDeleteProject} color="secondary">
+                            Delete
+                        </Button>
+                    </DialogActions>
+                </Dialog>
     </Box>
     </Layout>
   );
